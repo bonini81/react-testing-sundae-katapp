@@ -1,17 +1,40 @@
-import { render, fireEvent, screen } from "@testing-library/react";
+import React, { useState } from "react";
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
+import Popover from "react-bootstrap/Popover";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 
+export default function SummaryForm() {
+  const [tcChecked, setTcChecked] = useState(false);
 
-describe('Checked and Unchecked Test', ()=> {
-test("test to check wether the checkbox is unchcked by default", () => {
-  render(<App />);
-  //Click Button
-  const checkBoxName = screen.getByRole('checkbox', { 'name: Disable button' });  
-  expect(checkBoxName).not.toBeChecked();   
-});
+  const popover = (
+    <Popover id="termsandconditions-popover">
+      No ice cream will actually be delivered
+    </Popover>
+  );
 
-test("Onclick the Checkbox is checked", ()=> {
-fireEvent.click(checkBoxName);
-expect(checkBoxName).toBeChecked();
-})
+  const checkboxLabel = (
+    <span>
+      I agree to
+      <OverlayTrigger placement="right" overlay={popover}>
+        <span style={{ color: "blue" }}> Terms and Conditions</span>
+      </OverlayTrigger>
+    </span>
+  );
 
-});
+  return (
+    <Form>
+      <Form.Group controlId="terms-and-conditions">
+        <Form.Check
+          type="checkbox"
+          checked={tcChecked}
+          onChange={(e) => setTcChecked(e.target.checked)}
+          label={checkboxLabel}
+        />
+      </Form.Group>
+      <Button variant="primary" type="submit" disabled={!tcChecked}>
+        Confirm order
+      </Button>
+    </Form>
+  );
+}
